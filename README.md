@@ -107,6 +107,142 @@ Returns a single task by its ID.
 
 ---
 
+### Get Completed Tasks
+
+**`GET /api/tasks/completed`**
+ 
+Returns a list of all tasks marked as completed.
+ 
+**Response `200 OK`**
+```json
+[
+  {
+    "id": 1,
+    "title": "Complete Assignment",
+    "description": "Finish the Spring Boot project",
+    "completed": true,
+    "priority": "HIGH"
+  }
+]
+```
+ 
+---
+ 
+### Get Incomplete Tasks
+ 
+**`GET /api/tasks/incomplete`**
+ 
+Returns a list of all tasks that have not yet been completed.
+ 
+**Response `200 OK`**
+```json
+[
+  {
+    "id": 2,
+    "title": "Study for Exam",
+    "description": "Review all chapters",
+    "completed": false,
+    "priority": "MEDIUM"
+  }
+]
+```
+ 
+---
+ 
+### Get Tasks by Priority
+ 
+**`GET /api/tasks/priority/{priority}`**
+ 
+Returns all tasks matching the given priority level.
+ 
+| Parameter  | Type   | Description                             |
+|------------|--------|-----------------------------------------|
+| `priority` | String | Priority level: `LOW`, `MEDIUM`, `HIGH` |
+ 
+**Response `200 OK`**
+```json
+[
+  {
+    "id": 1,
+    "title": "Complete Assignment",
+    "description": "Finish the Spring Boot project",
+    "completed": false,
+    "priority": "HIGH"
+  }
+]
+```
+ 
+**Response `400 Bad Request`** — Returned when an invalid priority value is provided.
+ 
+---
+ 
+### Search Tasks
+ 
+**`GET /api/tasks/search?keyword={keyword}`**
+ 
+Returns all tasks whose title or description contains the given keyword.
+ 
+| Query Param | Type   | Required | Description     |
+|-------------|--------|----------|-----------------|
+| `keyword`   | String | ✅ Yes   | The search term |
+ 
+**Example Request**
+```
+GET /api/tasks/search?keyword=exam
+```
+ 
+**Response `200 OK`**
+```json
+[
+  {
+    "id": 2,
+    "title": "Study for Exam",
+    "description": "Review all chapters",
+    "completed": false,
+    "priority": "MEDIUM"
+  }
+]
+```
+ 
+---
+ 
+### Get Tasks Paginated
+ 
+**`GET /api/tasks/paginated`**
+ 
+Returns a paginated and sorted list of tasks.
+ 
+| Query Param | Type    | Required | Default | Description                         |
+|-------------|---------|----------|---------|-------------------------------------|
+| `page`      | Integer | ❌ No    | `0`     | Page number (zero-indexed)          |
+| `size`      | Integer | ❌ No    | `10`    | Number of tasks per page            |
+| `sortBy`    | String  | ❌ No    | `id`    | Field to sort by (e.g. `priority`)  |
+ 
+**Example Request**
+```
+GET /api/tasks/paginated?page=0&size=5&sortBy=priority
+```
+ 
+**Response `200 OK`**
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "title": "Complete Assignment",
+      "description": "Finish the Spring Boot project",
+      "completed": false,
+      "priority": "HIGH"
+    }
+  ],
+  "totalElements": 10,
+  "totalPages": 2,
+  "size": 5,
+  "number": 0
+}
+```
+---
+
 ### Create a Task
 
 **`POST /api/tasks`**
