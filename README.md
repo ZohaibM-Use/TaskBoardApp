@@ -8,7 +8,7 @@ A RESTful task management API built with Spring Boot. Campus Taskboard allows us
 
 [![API Endpoints](https://img.shields.io/badge/Watch-API_Endpoints-blue?style=for-the-badge&logo=loom)](https://www.loom.com/share/b66d4139111d473997c66b6abb84307c)
 
-[![JPA & Database Integration](https://img.shields.io/badge/Watch-JPA_&_Database-orange?style=for-the-badge&logo=loom)](https://www.loom.com/share/3cf28d22d49c47b49febb416d54fff38)
+[![JPA & Database Integration](https://img.shields.io/badge/Watch-JPA_%26_Database-orange?style=for-the-badge&logo=loom)](https://www.loom.com/share/3cf28d22d49c47b49febb416d54fff38)
 
 ---
 
