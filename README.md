@@ -2,8 +2,15 @@
 
 A RESTful task management API built with Spring Boot. Campus Taskboard allows users to create, read, update, and delete tasks (CRUD) — each with a title, description, priority level, and completion status.
 
-[API Endpoints](https://www.loom.com/share/b66d4139111d473997c66b6abb84307c)
-[JPA and Databse integration](https://www.loom.com/share/3cf28d22d49c47b49febb416d54fff38)
+---
+
+## 🎥 Demo Videos
+
+[![API Endpoints](https://img.shields.io/badge/Watch-API_Endpoints-blue?style=for-the-badge&logo=loom)](https://www.loom.com/share/b66d4139111d473997c66b6abb84307c)
+
+[![JPA & Database Integration](https://img.shields.io/badge/Watch-JPA_&_Database-orange?style=for-the-badge&logo=loom)](https://www.loom.com/share/3cf28d22d49c47b49febb416d54fff38)
+
+---
 
 ## 🚀 How to Run the Application
 
