@@ -1,6 +1,6 @@
 # 📋Taskboard App
 
-A RESTful task management API built with Spring Boot. Campus Taskboard allows users to create, read, update, and delete tasks (CRUD) — each with a title, description, priority level, and completion status.
+A RESTful task management API built with Spring Boot. Taskboard allows users to manage tasks with full CRUD functionality, including validation, filtering, and pagination. Users can create tasks with proper validation, view tasks with filtering and pagination support, update tasks with robust error handling, and delete tasks using soft-delete capabilities. The application persists data in a relational database with proper entity relationships, secures endpoints through user authentication, handles errors gracefully, and includes application health monitoring for improved reliability.
 
 ---
 
