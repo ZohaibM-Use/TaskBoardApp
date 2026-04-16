@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Board</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="tasks.js" defer></script>
+</head>
+<body>
+
+<div class="topbar">
+  <h1><span class="status-dot"></span> Task Board</h1>
+  <button class="btn primary" onclick="openModal()">+ New task</button>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="label">Total</div><div class="value" id="s-total">—</div></div>
+  <div class="stat"><div class="label">Complete</div><div class="value" id="s-done">—</div></div>
+  <div class="stat"><div class="label">Incomplete</div><div class="value" id="s-todo">—</div></div>
+  <div class="stat"><div class="label">High priority</div><div class="value" id="s-high">—</div></div>
+</div>
+
+<div class="toolbar">
+  <input type="text" id="search" placeholder="Search tasks…" oninput="onSearch(this.value)" autocomplete="off">
+  <select id="filter-status" onchange="render()">
+    <option value="all">All tasks</option>
+    <option value="incomplete">Incomplete</option>
+    <option value="complete">Complete</option>
+  </select>
+  <select id="filter-priority" onchange="render()">
+    <option value="all">Any priority</option>
+    <option value="HIGH">High</option>
+    <option value="MEDIUM">Medium</option>
+    <option value="LOW">Low</option>
+  </select>
+</div>
+
+<div id="error-area"></div>
+<div class="tasks" id="task-list"></div>
+
+<!-- PAGINATION CONTROLS -->
+<div class="pagination">
+  <button class="btn" onclick="prevPage()">Prev</button>
+  <span id="page-info"></span>
+  <button class="btn" onclick="nextPage()">Next</button>
+</div>
+
+<!-- New / Edit modal -->
+<div class="modal-bg" id="modal" style="display:none" onclick="onOverlayClick(event)">
+  <div class="modal">
+    <h2 id="modal-title">New task</h2>
+    <div class="form-group">
+      <label for="f-title">Title <span style="color:#993C1D">*</span></label>
+      <input id="f-title" placeholder="What needs to be done?" maxlength="100" autocomplete="off">
+      <div id="title-error" class="error-text"></div>
+    </div>
+    <div class="form-group">
+      <label for="f-desc">Description</label>
+      <textarea id="f-desc" placeholder="Optional details…" maxlength="500"></textarea>
+      <div id="desc-error" class="error-text"></div>
+    </div>
+    <div class="form-group">
+      <label for="f-priority">Priority</label>
+      <select id="f-priority">
+        <option value="MEDIUM">Medium</option>
+        <option value="HIGH">High</option>
+        <option value="LOW">Low</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="saveTask()">Save task</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+</body>
+</html>
