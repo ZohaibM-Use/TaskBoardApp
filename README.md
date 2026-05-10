@@ -346,3 +346,16 @@ Deletes a task by its ID.
 **Response `404 Not Found`** — Task with the given ID does not exist.
 
 ---
+
+### Get Application Health
+**`GET /actuator/health`**
+
+Returns the health status of the application.
+
+**Response `200 OK`**
+```json
+{
+  "status": "UP"
+}
+```
+---
