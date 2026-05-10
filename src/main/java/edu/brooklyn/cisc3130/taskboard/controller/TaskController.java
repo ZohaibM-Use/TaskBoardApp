@@ -1,5 +1,7 @@
 package edu.brooklyn.cisc3130.taskboard.controller;
 
+import edu.brooklyn.cisc3130.taskboard.dto.TaskRequest;
+import edu.brooklyn.cisc3130.taskboard.dto.TaskResponse;
 import edu.brooklyn.cisc3130.taskboard.model.Task;
 import edu.brooklyn.cisc3130.taskboard.service.TaskService;
 import jakarta.validation.Valid;
@@ -36,9 +38,8 @@ public class TaskController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable Integer id) {
-        Optional<Task> task = taskService.getTaskById(id);
-        return task.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Task task = taskService.getTaskById(id);
+        return ResponseEntity.ok(task);
     }
 
     @GetMapping("/completed")
@@ -82,25 +83,32 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest taskRequest) {
+        Task task = new Task();
+        task.setTitle(taskRequest.getTitle());
+        task.setDescription(taskRequest.getDescription());
+        task.setCompleted(taskRequest.getCompleted() != null ? taskRequest.getCompleted() : false);
+        task.setPriority(Task.Priority.valueOf(
+                taskRequest.getPriority() != null ?
+                        taskRequest.getPriority().toUpperCase() : "MEDIUM"));
+
         Task createdTask = taskService.createTask(task);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(TaskResponse.fromEntity(createdTask));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(
             @PathVariable Integer id,
             @Valid @RequestBody Task task) {
-        Optional<Task> updatedTask = taskService.updateTask(id, task);
-        return updatedTask.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Task updatedTask = taskService.updateTask(id, task);
+        return ResponseEntity.ok(updatedTask);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Integer id) {
-        boolean deleted = taskService.deleteTask(id);
-        return deleted ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 
     // Exception handler for validation errors

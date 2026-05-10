@@ -1,5 +1,6 @@
 package edu.brooklyn.cisc3130.taskboard.service;
 
+import edu.brooklyn.cisc3130.taskboard.exception.TaskNotFoundException;
 import edu.brooklyn.cisc3130.taskboard.model.Task;
 import edu.brooklyn.cisc3130.taskboard.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,16 @@ public class TaskService {
     }
 
     public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+        return taskRepository.findByDeletedFalse();
     }
 
     public Page<Task> getAllTasks(Pageable pageable){
         return taskRepository.findAll(pageable);
     }
 
-    public Optional<Task> getTaskById(Integer id) {
-        return taskRepository.findById(id);
+    public Task getTaskById(Integer id) {
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(id));
     }
 
     public Task createTask(Task task) {
@@ -44,22 +46,26 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Optional<Task> updateTask(Integer id, Task updatedTask) {
-        return taskRepository.findById(id).map(task -> {
-            task.setTitle(updatedTask.getTitle());
-            task.setDescription(updatedTask.getDescription());
-            task.setCompleted(updatedTask.getCompleted());
-            task.setPriority(updatedTask.getPriority());
-            return taskRepository.save(task);
-        });
+    public Task updateTask(Integer id, Task updatedTask) {
+        Task task = getTaskById(id);
+        task.setTitle(updatedTask.getTitle());
+        task.setDescription(updatedTask.getDescription());
+        task.setCompleted(updatedTask.getCompleted());
+        task.setPriority(updatedTask.getPriority());
+        return taskRepository.save(task);
     }
 
-    public boolean deleteTask(Integer id) {
-        if (taskRepository.existsById(id)) {
-            taskRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteTask(Integer id) {
+        Task task = getTaskById(id);
+        task.setDeleted(true);
+        taskRepository.save(task);
+    }
+
+    public void restoreTask(Integer id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(id));
+        task.setDeleted(false);
+        taskRepository.save(task);
     }
 
     public List<Task> getCompletedTasks() {

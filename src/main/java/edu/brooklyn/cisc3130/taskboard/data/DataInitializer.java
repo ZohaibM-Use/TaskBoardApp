@@ -16,56 +16,88 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+
         if (taskRepository.count() == 0) {
-            taskRepository.save(new Task(
-                    null, "Complete Homework 6",
+
+            taskRepository.save(createTask(
+                    "Complete Homework 6",
                     "Finish Spring Data JPA assignment",
-                    false, Task.Priority.HIGH, null, null));
+                    false,
+                    Task.Priority.HIGH
+            ));
 
-            taskRepository.save(new Task(
-                    null, "Study for Midterm",
+            taskRepository.save(createTask(
+                    "Study for Midterm",
                     "Review chapters 1-5",
-                    false, Task.Priority.HIGH, null, null));
+                    false,
+                    Task.Priority.HIGH
+            ));
 
-            taskRepository.save(new Task(
-                    null, "Buy groceries",
+            taskRepository.save(createTask(
+                    "Buy groceries",
                     "Milk, eggs, bread",
-                    true, Task.Priority.LOW, null, null));
+                    true,
+                    Task.Priority.LOW
+            ));
 
-            taskRepository.save(new Task(
-                    null, "Create an appointment",
+            taskRepository.save(createTask(
+                    "Create an appointment",
                     "Call Doctor",
-                    false, Task.Priority.MEDIUM, null, null));
+                    false,
+                    Task.Priority.MEDIUM
+            ));
 
-            taskRepository.save(new Task(
-                    null, "Go for a run",
+            taskRepository.save(createTask(
+                    "Go for a run",
                     "Run 3 miles in the park",
-                    false, Task.Priority.LOW, null, null));
+                    false,
+                    Task.Priority.LOW
+            ));
 
-            taskRepository.save(new Task(
-                    null, "Submit homework",
+            taskRepository.save(createTask(
+                    "Submit homework",
                     "Upload homework to the class portal before deadline",
-                    false, Task.Priority.MEDIUM, null, null));
+                    false,
+                    Task.Priority.MEDIUM
+            ));
 
-            taskRepository.save(new Task(
-                    null, "Read a book",
+            taskRepository.save(createTask(
+                    "Read a book",
                     "Read 30 pages of a novel",
-                    true, Task.Priority.LOW, null, null));
+                    true,
+                    Task.Priority.LOW
+            ));
 
-            taskRepository.save(new Task(
-                    null, "Prepare for meeting",
+            taskRepository.save(createTask(
+                    "Prepare for meeting",
                     "Review agenda and notes before team sync",
-                    false, Task.Priority.MEDIUM, null, null));
+                    false,
+                    Task.Priority.MEDIUM
+            ));
 
-            taskRepository.save(new Task(
-                    null, "Work on project",
+            taskRepository.save(createTask(
+                    "Work on project",
                     "Finish backend API endpoints",
-                    true, Task.Priority.HIGH, null, null));
+                    true,
+                    Task.Priority.HIGH
+            ));
 
-            taskRepository.save(new Task(
-                    null, "Plan weekend trip",
+            taskRepository.save(createTask(
+                    "Plan weekend trip",
                     "Book hotel and create itinerary",
-                    false, Task.Priority.LOW, null, null));
+                    false,
+                    Task.Priority.LOW
+            ));
         }
+    }
+
+    private Task createTask(String title, String description, Boolean completed, Task.Priority priority) {
+        Task task = new Task();
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setCompleted(completed);
+        task.setPriority(priority);
+        task.setDeleted(false);
+        return task;
     }
 }
