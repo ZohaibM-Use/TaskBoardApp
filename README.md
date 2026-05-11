@@ -10,6 +10,8 @@ A RESTful task management API built with Spring Boot. Taskboard allows users to 
 
 [![JPA & Database Integration](https://img.shields.io/badge/Watch-JPA_%26_Database_Integration-orange?style=for-the-badge&logo=loom)](https://www.loom.com/share/3cf28d22d49c47b49febb416d54fff38)
 
+[![Exception and DTOs](https://img.shields.io/badge/Watch-Exception_and_DTOs-green?style=for-the-badge&logo=loom)](https://www.loom.com/share/cf1cbc30e8674d839739d9ae92c680fc)
+
 ---
 
 ## 🚀 How to Run the Application
