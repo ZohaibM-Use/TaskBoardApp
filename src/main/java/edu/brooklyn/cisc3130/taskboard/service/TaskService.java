@@ -32,8 +32,14 @@ public class TaskService {
     }
 
     public Task getTaskById(Integer id) {
-        return taskRepository.findById(id)
+        Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(id));
+
+        if (task.getDeleted()) {
+            throw new TaskNotFoundException(id);
+        }
+
+        return task;
     }
 
     public Task createTask(Task task) {

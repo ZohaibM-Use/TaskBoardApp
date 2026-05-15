@@ -1,4 +1,4 @@
-package edu.brooklyn.cisc3130.taskboard.controller;
+package edu.brooklyn.cisc3130.taskboard.controller.v1;
 
 import edu.brooklyn.cisc3130.taskboard.dto.TaskRequest;
 import edu.brooklyn.cisc3130.taskboard.dto.TaskResponse;
@@ -12,29 +12,25 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/tasks")
-public class TaskController {
-
+@RequestMapping("/api/v1/tasks")
+public class TaskControllerv1 {
     private final TaskService taskService;
 
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
+    public TaskControllerv1(TaskService taskService){this.taskService = taskService;}
 
-    @Operation(summary = "Get all tasks", description = "Retrieve a list of all tasks")
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks() {
-        List<Task> tasks = taskService.getAllTasks();
+    public ResponseEntity<List<TaskResponse>> getAllTasks() {
+        List<TaskResponse> tasks = taskService.getAllTasks().stream()
+                .map(TaskResponse::fromEntity)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(tasks);
     }
 
-    @Parameter(description = "Task ID", required = true)
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable Integer id) {
         Task task = taskService.getTaskById(id);

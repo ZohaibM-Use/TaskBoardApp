@@ -1,5 +1,6 @@
 package edu.brooklyn.cisc3130.taskboard.dto;
 
+import edu.brooklyn.cisc3130.taskboard.validation.ValidPriority;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -15,5 +16,6 @@ public class TaskRequest {
 
     private Boolean completed;
 
+    @ValidPriority
     private String priority;
 }

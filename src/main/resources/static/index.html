@@ -3,79 +3,176 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Board</title>
+  <title>Campus TaskBoard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script src="tasks.js" defer></script>
+  <script src="tasks.js"></script>
 </head>
 <body>
 
-<div class="topbar">
-  <h1><span class="status-dot"></span> Task Board</h1>
-  <button class="btn primary" onclick="openModal()">+ New task</button>
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    Campus TaskBoard
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-primary" onclick="openCreateModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      New Task
+    </button>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('board')">Board</div>
+  <div class="tab" onclick="switchTab('list')">All Tasks</div>
+  <div class="tab" onclick="switchTab('deleted')">Deleted</div>
 </div>
 
-<div class="stats">
-  <div class="stat"><div class="label">Total</div><div class="value" id="s-total">—</div></div>
-  <div class="stat"><div class="label">Complete</div><div class="value" id="s-done">—</div></div>
-  <div class="stat"><div class="label">Incomplete</div><div class="value" id="s-todo">—</div></div>
-  <div class="stat"><div class="label">High priority</div><div class="value" id="s-high">—</div></div>
+<div class="stats-bar">
+  <div class="stat">Total <strong id="statTotal">—</strong></div>
+  <div class="stat">Incomplete <strong id="statIncomplete">—</strong></div>
+  <div class="stat">Complete <strong id="statComplete">—</strong></div>
+  <div class="stat">High Priority <strong id="statHigh">—</strong></div>
 </div>
 
 <div class="toolbar">
-  <input type="text" id="search" placeholder="Search tasks…" oninput="onSearch(this.value)" autocomplete="off">
-  <select id="filter-status" onchange="render()">
-    <option value="all">All tasks</option>
-    <option value="incomplete">Incomplete</option>
-    <option value="complete">Complete</option>
-  </select>
-  <select id="filter-priority" onchange="render()">
-    <option value="all">Any priority</option>
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Search tasks…" oninput="handleSearch(this.value)">
+  </div>
+  <select id="priorityFilter" onchange="applyFilters()">
+    <option value="">All Priorities</option>
     <option value="HIGH">High</option>
     <option value="MEDIUM">Medium</option>
     <option value="LOW">Low</option>
   </select>
+  <select id="statusFilter" onchange="applyFilters()">
+    <option value="">All Statuses</option>
+    <option value="incomplete">Incomplete</option>
+    <option value="completed">Completed</option>
+  </select>
+  <button class="btn btn-ghost btn-sm" onclick="clearFilters()">Clear</button>
 </div>
 
-<div id="error-area"></div>
-<div class="tasks" id="task-list"></div>
+<!-- BOARD TAB -->
+<div id="tab-board">
+  <div class="board-wrap">
+    <div class="board">
+      <div class="column">
+        <div class="column-header">
+          <div class="column-title">
+            <div class="col-dot" style="background:#7a7a8e"></div>
+            To Do
+          </div>
+          <span class="col-count" id="count-todo">0</span>
+        </div>
+        <div class="column-body" id="tasks-todo"
+             ondragover="onDragOver(event)"
+             ondrop="onDrop(event,false)"
+             ondragleave="onDragLeave(event)"></div>
+      </div>
 
-<!-- PAGINATION CONTROLS -->
-<div class="pagination">
-  <button class="btn" onclick="prevPage()">Prev</button>
-  <span id="page-info"></span>
-  <button class="btn" onclick="nextPage()">Next</button>
+      <div class="column">
+        <div class="column-header">
+          <div class="column-title">
+            <div class="col-dot" style="background:#e8a838"></div>
+            In Progress
+          </div>
+          <span class="col-count" id="count-inprogress">0</span>
+        </div>
+        <div class="column-body" id="tasks-inprogress"
+             ondragover="onDragOver(event)"
+             ondrop="onDrop(event,false)"
+             ondragleave="onDragLeave(event)"></div>
+      </div>
+
+      <div class="column">
+        <div class="column-header">
+          <div class="column-title">
+            <div class="col-dot" style="background:#4caf82"></div>
+            Done
+          </div>
+          <span class="col-count" id="count-done">0</span>
+        </div>
+        <div class="column-body" id="tasks-done"
+             ondragover="onDragOver(event)"
+             ondrop="onDrop(event,true)"
+             ondragleave="onDragLeave(event)"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- New / Edit modal -->
-<div class="modal-bg" id="modal" style="display:none" onclick="onOverlayClick(event)">
+<!-- LIST TAB -->
+<div id="tab-list" class="hidden list-panel">
+  <table class="list-table">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>Priority</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="listBody"></tbody>
+  </table>
+  <div class="pagination">
+    <button class="btn btn-ghost btn-sm" onclick="changePage(-1)" id="prevBtn">← Prev</button>
+    <span class="page-info" id="pageInfo">Page 1</span>
+    <button class="btn btn-ghost btn-sm" onclick="changePage(1)" id="nextBtn">Next →</button>
+    <select id="pageSizeSelect" onchange="changePageSize()" style="width:auto">
+      <option value="5">5 / page</option>
+      <option value="10" selected>10 / page</option>
+      <option value="20">20 / page</option>
+    </select>
+  </div>
+</div>
+
+<!-- DELETED TAB -->
+<div id="tab-deleted" class="hidden deleted-panel">
+  <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px">
+    Soft-deleted tasks — restore to bring them back to the board
+  </div>
+  <div class="deleted-grid" id="deletedGrid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="taskModal">
   <div class="modal">
-    <h2 id="modal-title">New task</h2>
+    <div class="modal-title" id="modalTitle">Create Task</div>
     <div class="form-group">
-      <label for="f-title">Title <span style="color:#993C1D">*</span></label>
-      <input id="f-title" placeholder="What needs to be done?" maxlength="100" autocomplete="off">
-      <div id="title-error" class="error-text"></div>
+      <label>Title *</label>
+      <input type="text" id="taskTitle" placeholder="Enter task title…">
     </div>
     <div class="form-group">
-      <label for="f-desc">Description</label>
-      <textarea id="f-desc" placeholder="Optional details…" maxlength="500"></textarea>
-      <div id="desc-error" class="error-text"></div>
+      <label>Description</label>
+      <textarea id="taskDesc" placeholder="Add a description…"></textarea>
     </div>
     <div class="form-group">
-      <label for="f-priority">Priority</label>
-      <select id="f-priority">
+      <label>Priority</label>
+      <select id="taskPriority">
         <option value="MEDIUM">Medium</option>
         <option value="HIGH">High</option>
         <option value="LOW">Low</option>
       </select>
     </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="taskCompleted">
+        <option value="false">Incomplete</option>
+        <option value="true">Completed</option>
+      </select>
+    </div>
     <div class="modal-actions">
-      <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn primary" onclick="saveTask()">Save task</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTask()" id="saveBtn">Create Task</button>
     </div>
   </div>
 </div>
 
-<div id="toast"></div>
+<div class="toast-wrap" id="toastWrap"></div>
 
 </body>
 </html>
