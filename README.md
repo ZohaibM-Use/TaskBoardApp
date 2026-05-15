@@ -12,6 +12,8 @@ A RESTful task management API built with Spring Boot. Taskboard allows users to 
 
 [![Exception and DTOs](https://img.shields.io/badge/Watch-Exception_and_DTOs-green?style=for-the-badge&logo=loom)](https://www.loom.com/share/cf1cbc30e8674d839739d9ae92c680fc)
 
+[![Security Configuration](https://img.shields.io/badge/Watch-Security_Configuration-red?style=for-the-badge&logo=loom)](https://www.loom.com/share/3a12622438aa48029e68893de28346ec)
+
 ---
 
 ## 🚀 How to Run the Application
